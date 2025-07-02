@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MotoStyle - Tienda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Montserrat:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body { margin:0; font-family:'Poppins', sans-serif; background:#f5f5f5; color:#333; display:flex; flex-direction:column; }
+    header { background:#b30000; color:#fff; text-align:center; padding:1.5rem; font-family:'Montserrat', sans-serif; position:relative; width:100%; }
+    #miniCarrito { position:absolute; top:1rem; right:1rem; background:#fff; color:#000; border:2px solid #b30000; border-radius:6px; padding:0.5rem 1rem; font-size:0.85rem; box-shadow:0 0 5px rgba(0,0,0,0.2); max-width:250px; }
+    main { display:flex; max-width:1200px; margin:2rem auto; width:100%; gap:1rem; padding:0 1rem; }
+    aside { width:200px; cursor:pointer; }
+    aside img { width:100%; border-radius:6px; margin-bottom:1rem; }
+    h2 { border-bottom:2px solid #b30000; padding-bottom:0.5rem; }
+    .catalogo { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1rem; }
+    .producto { background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.1); display:flex; flex-direction:column; }
+    .producto img { width:100%; height:200px; object-fit:cover; }
+    .producto-content { padding:1rem; flex:1; }
+    .producto-content button { background:#b30000; color:#fff; border:none; padding:0.5rem 1rem; border-radius:5px; cursor:pointer; margin-top:0.5rem; margin-right:0.5rem; }
+    .modal { display:none; position:fixed; z-index:100; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.6); }
+    .modal-content { background:#fff; margin:10% auto; padding:1rem; border-radius:8px; width:90%; max-width:500px; text-align:center; }
+    .close { float:right; font-size:1.5rem; cursor:pointer; }
+    form { background:#fff; padding:1rem; border-radius:8px; margin-bottom:2rem; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+    form input, form textarea { width:100%; padding:0.5rem; margin:0.5rem 0; border:1px solid #ccc; border-radius:4px; font-family:'Poppins', sans-serif; }
+    form button { background:#b30000; color:white; border:none; padding:0.7rem 1rem; border-radius:5px; cursor:pointer; }
+    footer { text-align:center; padding:1rem; font-size:0.9rem; color:#777; width:100%; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MotoStyle</h1>
+    <p>¡Todo para el motociclista moderno!</p>
+    <div id="miniCarrito">Carrito vacío</div>
+  </header>
+
+  <main>
+    <aside onclick="verPromocion()">
+      <h3>Promoción Especial</h3>
+      <img src="img/promoción.jpg" alt="Promoción Especial">
+    </aside>
+
+    <div style="flex:2;">
+      <section>
+        <h2>Catálogo</h2>
+        <div class="catalogo" id="catalogo"></div>
+      </section>
+
+      <section>
+        <h2>Deja tus datos para que un vendedor se contacte contigo</h2>
+        <form id="formCliente">
+          <input type="text" id="nombreCliente" placeholder="Nombre completo" required>
+          <input type="tel" id="telefonoCliente" placeholder="Teléfono" required>
+          <input type="email" id="emailCliente" placeholder="Correo electrónico" required>
+          <button type="submit">Registrar</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Soporte al Cliente</h2>
+        <form id="formSoporte">
+          <input type="text" id="nombreSoporte" placeholder="Nombre completo" required>
+          <input type="email" id="emailSoporte" placeholder="Correo electrónico" required>
+          <textarea id="mensajeSoporte" rows="4" placeholder="Describe tu consulta" required></textarea>
+          <button type="submit">Enviar Soporte</button>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="cerrarModal()">&times;</span>
+      <h3 id="modalNombre"></h3>
+      <img id="modalImagen" src="" alt="" style="width:100%; height:200px; object-fit:cover;">
+      <p id="modalDescripcion" style="margin-top:1rem;"></p>
+    </div>
+  </div>
+
+  <footer>
+
+    MotoStyle &copy; 2025
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOP8eJXYA6oObAzM6smGPn6ggIOpChreQ",
+      authDomain: "motostylee23.firebaseapp.com",
+      projectId: "motostylee23",
+      storageBucket: "motostylee23.appspot.com",
+      messagingSenderId: "533213550084",
+      appId: "1:533213550084:web:a74597fbce79682c8d4751"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const productos = [
+      { nombre: "Moto Yamaha MT-03", precio: 28000000, imagen: "img/moto2.jpg", descripcion: "Moto deportiva de 321cc." },
+      { nombre: "Casco Rojo Yamaha", precio: 550000, imagen: "img/casco1.jpg", descripcion: "Casco integral de alta seguridad." },
+      { nombre: "Moto Deportiva 600cc", precio: 35000000, imagen: "img/moto3.jpg", descripcion: "Moto potente para carretera." },
+      { nombre: "Scooter Eléctrica", precio: 12000000, imagen: "img/scooter1.jpg", descripcion: "Scooter ecológica y silenciosa." },
+      { nombre: "Moto Enduro 250cc", precio: 22000000, imagen: "img/moto4.jpg", descripcion: "Perfecta para caminos difíciles." },
+      { nombre: "Casco Integral", precio: 480000, imagen: "img/casco2.jpg", descripcion: "Casco cómodo y resistente." },
+      { nombre: "Guantes de Protección", precio: 120000, imagen: "img/guantes.jpg", descripcion: "Protección contra caídas." },
+      { nombre: "Botas de Motociclista", precio: 300000, imagen: "img/botas.jpg", descripcion: "Botas resistentes al agua." },
+      { nombre: "Chaqueta Negra Impermeable", precio: 400000, imagen: "img/chaqueta.png", descripcion: "Chaqueta térmica de protección." },
+      { nombre: "Maleta Lateral Moto", precio: 250000, imagen: "img/maleta.jpg", descripcion: "Maleta amplia para viajes." },
+      { nombre: "Maletero Negro", precio: 390000, imagen: "img/maletero}.png", descripcion: "Maletero con cierre seguro." },
+      { nombre: "Honda CMX500 Rebel", precio: 62000000, imagen: "img/moto5.jpg", descripcion: "Estilo cruiser y gran torque." }
+    ];
+
+    const catalogo = document.getElementById("catalogo");
+    const miniCarrito = document.getElementById("miniCarrito");
+    const carrito = [];
+
+    productos.forEach((prod, index) => {
+      const div = document.createElement("div");
+      div.className = "producto";
+      div.innerHTML = `
+        <img src="${prod.imagen}" alt="${prod.nombre}">
+        <div class="producto-content">
+          <h3>${prod.nombre}</h3>
+          <p>$${prod.precio.toLocaleString()} COP</p>
+          <button onclick="verMas(${index})">Ver más</button>
+          <button onclick="agregarCarrito(${index})">Agregar al carrito</button>
+        </div>
+      `;
+      catalogo.appendChild(div);
+    });
+
+    window.verMas = function(i) {
+      document.getElementById("modalNombre").innerText = productos[i].nombre;
+      document.getElementById("modalImagen").src = productos[i].imagen;
+      document.getElementById("modalDescripcion").innerText = productos[i].descripcion;
+      document.getElementById("modal").style.display = "block";
+      registrarClick(productos[i].nombre + " - Ver más");
+    };
+
+    window.verPromocion = function() {
+      document.getElementById("modalNombre").innerText = "Promoción Especial";
+      document.getElementById("modalImagen").src = "img/promoción.jpg";
+      document.getElementById("modalDescripcion").innerText = "¡Aprovecha nuestra promoción exclusiva por tiempo limitado! Casco + impermeable por solo $290.000";
+      document.getElementById("modal").style.display = "block";
+      registrarClick("Promoción Especial - Ver más");
+    };
+
+    window.cerrarModal = function() {
+      document.getElementById("modal").style.display = "none";
+    };
+
+    window.agregarCarrito = function(i) {
+      carrito.push(productos[i]);
+      mostrarMiniCarrito();
+      registrarClick(productos[i].nombre + " - Agregado al carrito");
+    };
+
+    window.eliminarDelCarrito = function(index) {
+      carrito.splice(index, 1);
+      mostrarMiniCarrito();
+    };
+
+    window.confirmarPedido = async function() {
+      if (carrito.length === 0) {
+        alert("El carrito está vacío.");
+        return;
+      }
+      const total = carrito.reduce((sum, p) => sum + p.precio, 0);
+      await addDoc(collection(db, "pedidos"), {
+        productos: carrito.map(p => p.nombre),
+        total,
+        timestamp: new Date()
+      });
+      alert("¡Pedido confirmado! Un asesor se comunicará contigo.");
+      const mensaje = encodeURIComponent(`Hola, soy un cliente de MotoStyle y acabo de realizar un pedido. Total: $${total.toLocaleString()} COP.`);
+      window.open(`https://wa.me/573203966847?text=${mensaje}`, "_blank");
+      carrito.length = 0;
+      mostrarMiniCarrito();
+    };
+
+    function mostrarMiniCarrito() {
+      if (carrito.length === 0) {
+        miniCarrito.innerText = "Carrito vacío";
+      } else {
+        const total = carrito.reduce((sum, p) => sum + p.precio, 0);
+        miniCarrito.innerHTML =
+          "<strong>Carrito:</strong><br>" +
+          carrito.map((p, i) => `• ${p.nombre} - $${p.precio.toLocaleString()}<br><button onclick="eliminarDelCarrito(${i})">Eliminar</button>`).join("<br>") +
+          `<br><strong>Total:</strong> $${total.toLocaleString()} COP<br><button onclick="confirmarPedido()">Confirmar Pedido y enviar WhatsApp</button>`;
+      }
+    }
+
+    async function registrarClick(nombre) {
+      try {
+        await addDoc(collection(db, "clicks"), {
+          producto: nombre,
+          timestamp: new Date()
+        });
+      } catch (e) {
+        console.error("Error:", e);
+      }
+    }
+
+    document.getElementById("formCliente").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await addDoc(collection(db, "clientes"), {
+        nombre: e.target.nombreCliente.value,
+        telefono: e.target.telefonoCliente.value,
+        email: e.target.emailCliente.value,
+        timestamp: new Date()
+      });
+      alert("Cliente registrado correctamente.");
+      e.target.reset();
+    });
+
+    document.getElementById("formSoporte").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await addDoc(collection(db, "soporte"), {
+        nombre: e.target.nombreSoporte.value,
+        email: e.target.emailSoporte.value,
+        mensaje: e.target.mensajeSoporte.value,
+        timestamp: new Date()
+      });
+      alert("Mensaje de soporte enviado.");
+      e.target.reset();
+    });
+  </script>
+<a href="https://wa.me/573203966847" target="_blank" style="
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background-color:#25D366;
+  color:white;
+  padding:0.9rem 1.2rem;
+  border-radius:50px;
+  text-decoration:none;
+  font-size:1rem;
+  box-shadow:0 2px 5px rgba(0,0,0,0.3);
+  z-index:999;
+">
+  💬 WhatsApp
+</a>
+
+</body>
+</html>
