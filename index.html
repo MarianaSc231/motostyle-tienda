@@ -37,7 +37,7 @@
   <main>
     <aside onclick="verPromocion()">
       <h3>Promoción Especial</h3>
-      <img src="img/promoción.jpg" alt="Promoción Especial">
+      <img src="promoción.jpg" alt="Promoción Especial">
     </aside>
 
     <div style="flex:2;">
@@ -99,18 +99,18 @@
     const db = getFirestore(app);
 
     const productos = [
-      { nombre: "Moto Yamaha MT-03", precio: 28000000, imagen: "img/moto2.jpg", descripcion: "Moto deportiva de 321cc." },
-      { nombre: "Casco Rojo Yamaha", precio: 550000, imagen: "img/casco1.jpg", descripcion: "Casco integral de alta seguridad." },
-      { nombre: "Moto Deportiva 600cc", precio: 35000000, imagen: "img/moto3.jpg", descripcion: "Moto potente para carretera." },
-      { nombre: "Scooter Eléctrica", precio: 12000000, imagen: "img/scooter1.jpg", descripcion: "Scooter ecológica y silenciosa." },
-      { nombre: "Moto Enduro 250cc", precio: 22000000, imagen: "img/moto4.jpg", descripcion: "Perfecta para caminos difíciles." },
-      { nombre: "Casco Integral", precio: 480000, imagen: "img/casco2.jpg", descripcion: "Casco cómodo y resistente." },
-      { nombre: "Guantes de Protección", precio: 120000, imagen: "img/guantes.jpg", descripcion: "Protección contra caídas." },
-      { nombre: "Botas de Motociclista", precio: 300000, imagen: "img/botas.jpg", descripcion: "Botas resistentes al agua." },
-      { nombre: "Chaqueta Negra Impermeable", precio: 400000, imagen: "img/chaqueta.png", descripcion: "Chaqueta térmica de protección." },
-      { nombre: "Maleta Lateral Moto", precio: 250000, imagen: "img/maleta.jpg", descripcion: "Maleta amplia para viajes." },
-      { nombre: "Maletero Negro", precio: 390000, imagen: "img/maletero}.png", descripcion: "Maletero con cierre seguro." },
-      { nombre: "Honda CMX500 Rebel", precio: 62000000, imagen: "img/moto5.jpg", descripcion: "Estilo cruiser y gran torque." }
+      { nombre: "Moto Yamaha MT-03", precio: 28000000, imagen: "moto2.jpg", descripcion: "Moto deportiva de 321cc." },
+      { nombre: "Casco Rojo Yamaha", precio: 550000, imagen: "casco1.jpg", descripcion: "Casco integral de alta seguridad." },
+      { nombre: "Moto Deportiva 600cc", precio: 35000000, imagen: "moto3.jpg", descripcion: "Moto potente para carretera." },
+      { nombre: "Scooter Eléctrica", precio: 12000000, imagen: "scooter1.jpg", descripcion: "Scooter ecológica y silenciosa." },
+      { nombre: "Moto Enduro 250cc", precio: 22000000, imagen: "moto4.jpg", descripcion: "Perfecta para caminos difíciles." },
+      { nombre: "Casco Integral", precio: 480000, imagen: "casco2.jpg", descripcion: "Casco cómodo y resistente." },
+      { nombre: "Guantes de Protección", precio: 120000, imagen: "guantes.jpg", descripcion: "Protección contra caídas." },
+      { nombre: "Botas de Motociclista", precio: 300000, imagen: "botas.jpg", descripcion: "Botas resistentes al agua." },
+      { nombre: "Chaqueta Negra Impermeable", precio: 400000, imagen: "chaqueta.png", descripcion: "Chaqueta térmica de protección." },
+      { nombre: "Maleta Lateral Moto", precio: 250000, imagen: "maleta.jpg", descripcion: "Maleta amplia para viajes." },
+      { nombre: "Maletero Negro", precio: 390000, imagen: "maletero}.png", descripcion: "Maletero con cierre seguro." },
+      { nombre: "Honda CMX500 Rebel", precio: 62000000, imagen: "moto5.jpg", descripcion: "Estilo cruiser y gran torque." }
     ];
 
     const catalogo = document.getElementById("catalogo");
@@ -142,7 +142,7 @@
 
     window.verPromocion = function() {
       document.getElementById("modalNombre").innerText = "Promoción Especial";
-      document.getElementById("modalImagen").src = "img/promoción.jpg";
+      document.getElementById("modalImagen").src = "promoción.jpg";
       document.getElementById("modalDescripcion").innerText = "¡Aprovecha nuestra promoción exclusiva por tiempo limitado! Casco + impermeable por solo $290.000";
       document.getElementById("modal").style.display = "block";
       registrarClick("Promoción Especial - Ver más");
