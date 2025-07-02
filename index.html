@@ -78,7 +78,6 @@
   </div>
 
   <footer>
-
     MotoStyle &copy; 2025
   </footer>
 
@@ -109,7 +108,7 @@
       { nombre: "Botas de Motociclista", precio: 300000, imagen: "botas.jpg", descripcion: "Botas resistentes al agua." },
       { nombre: "Chaqueta Negra Impermeable", precio: 400000, imagen: "chaqueta.png", descripcion: "Chaqueta térmica de protección." },
       { nombre: "Maleta Lateral Moto", precio: 250000, imagen: "maleta.jpg", descripcion: "Maleta amplia para viajes." },
-      { nombre: "Maletero Negro", precio: 390000, imagen: "maletero}.png", descripcion: "Maletero con cierre seguro." },
+      { nombre: "Maletero Negro", precio: 390000, imagen: "maletero.png", descripcion: "Maletero con cierre seguro." },
       { nombre: "Honda CMX500 Rebel", precio: 62000000, imagen: "moto5.jpg", descripcion: "Estilo cruiser y gran torque." }
     ];
 
@@ -188,8 +187,13 @@
         const total = carrito.reduce((sum, p) => sum + p.precio, 0);
         miniCarrito.innerHTML =
           "<strong>Carrito:</strong><br>" +
-          carrito.map((p, i) => `• ${p.nombre} - $${p.precio.toLocaleString()}<br><button onclick="eliminarDelCarrito(${i})">Eliminar</button>`).join("<br>") +
-          `<br><strong>Total:</strong> $${total.toLocaleString()} COP<br><button onclick="confirmarPedido()">Confirmar Pedido;
+          carrito
+            .map(
+              (p, i) =>
+                `• ${p.nombre} - $${p.precio.toLocaleString()}<br><button onclick="eliminarDelCarrito(${i})">Eliminar</button>`
+            )
+            .join("<br>") +
+          `<br><strong>Total:</strong> $${total.toLocaleString()} COP<br><button onclick="confirmarPedido()">Confirmar Pedido</button>`;
       }
     }
 
@@ -243,6 +247,5 @@
 ">
   💬 WhatsApp
 </a>
-
 </body>
 </html>
