@@ -189,7 +189,7 @@
         miniCarrito.innerHTML =
           "<strong>Carrito:</strong><br>" +
           carrito.map((p, i) => `• ${p.nombre} - $${p.precio.toLocaleString()}<br><button onclick="eliminarDelCarrito(${i})">Eliminar</button>`).join("<br>") +
-          `<br><strong>Total:</strong> $${total.toLocaleString()} COP<br><button onclick="confirmarPedido()">Confirmar Pedido y enviar WhatsApp</button>`;
+          `<br><strong>Total:</strong> $${total.toLocaleString()} COP<br><button onclick="confirmarPedido()">Confirmar Pedido;
       }
     }
 
